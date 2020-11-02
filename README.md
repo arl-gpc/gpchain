@@ -1,0 +1,13 @@
+# Global Permission Chain
+
+**Introduction**
+
+As we increasingly rely on computers to make decisions and take action automatically, or give us guidance on the best course of action, it becomes increasingly important that the computers thwart attempts to gain unauthorized access. Computers usually have a list of authorized users, along with a representation of their password and a description of what each user has permission to do. Populating this list, however, remains a difficult problem that frequently requires human oversight.
+
+In this document, we introduce the Global Permission Derivation Chain (GPDC). The goal of this system is to give a computer the ability to evaluate a user it has never seen before and automatically derive which permissions the user should have. The basic strategy is for the user to provide documentation backing up their claim to a certain level of permission, and for the computer to check a distributed global ledger to confirm that the documents were published and never revoked. The user that the computer is interacting with need not be a person, but could be an autonomous system or IoT sensor.
+
+In order to develop the necessary designs and prove out the concept, we have built a working prototype of the GPDC. The prototype uses a Hyperledger Fabric blockchain to register digital certificates, which users can use to gain access to a protected system. Computers can learn about the state of blockchain by listening to broadcasts from an entity called a Relay. These broadcasts are highly efficient and would be suitable for computers with very limited bandwidth. Such computers would be analogous to GPS devices, but instead of keeping track of their location, they would keep track of the information necessary to evaluate a user’s request for permission. Similar to GPS, the Global Permission Chain does not require that the participants be online during their interaction.
+
+Our design optimizes for high scalability, reliability through distributed control, and minimal bandwidth requirements for the end-users.
+
+We see potential applications for this technology in situations where manual access control setup is inconvenient or infeasible, for example with Internet of Things (IoT) devices or autonomous systems. Another application could be situations where personnel are in a dynamic environment where it is hard to predict who they will work with, or what equipment they will work with. These personnel may have limited opportunity to communicate with the outside world to ask questions about the history of the people and equipment they are working with, and the level of access they should grant.
