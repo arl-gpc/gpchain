@@ -1,0 +1,37 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "mtyMQcjd5d0kq4w2/1VAd0KAJZ0=",
+			"path": "github.com/eclipse/paho.mqtt.golang",
+			"revision": "93c8a06e1e6dfeb17dd18a44e3e2f4e1db778237",
+			"revisionTime": "2019-07-17T16:31:23Z"
+		},
+		{
+			"checksumSHA1": "1KxhONtvenst6Acr8Ig3I9oNF2E=",
+			"path": "github.com/eclipse/paho.mqtt.golang/packets",
+			"revision": "93c8a06e1e6dfeb17dd18a44e3e2f4e1db778237",
+			"revisionTime": "2019-07-17T16:31:23Z"
+		},
+		{
+			"checksumSHA1": "hoilQzrHNOxF5Tc6ctXNTDpv4ck=",
+			"path": "github.com/gorilla/websocket",
+			"revision": "ae1634f6a98965ded3b8789c626cb4e0bd78c3de",
+			"revisionTime": "2019-06-29T18:55:28Z"
+		},
+		{
+			"checksumSHA1": "f3Y7JIZH61oMmp8nphqe8Mg+XoU=",
+			"path": "golang.org/x/net/internal/socks",
+			"revision": "da137c7871d730100384dbcf36e6f8fa493aef5b",
+			"revisionTime": "2019-06-28T18:40:41Z"
+		},
+		{
+			"checksumSHA1": "28Sn0XihdqNv3MysxyRalibC3Tg=",
+			"path": "golang.org/x/net/proxy",
+			"revision": "da137c7871d730100384dbcf36e6f8fa493aef5b",
+			"revisionTime": "2019-06-28T18:40:41Z"
+		}
+	],
+	"rootPath": "blockchain-service/relay-receviver"
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Permission Marshal</title>
+  <!-- Node JS Dependecies -->
+  <script src="/node_modules/angular/angular.min.js"></script>
+  <script src="/node_modules/angular-route/angular-route.min.js"></script>
+  <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/node_modules/js-crypto-key-utils/dist/jsckey.bundle.min.js"></script>
+  <script src="/node_modules/angular-file-saver/dist/angular-file-saver.bundle.min.js"></script>
+  <script src="/node_modules/node-forge/dist/forge.min.js"></script>
+  
+  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  
+  <!-- TODO swamp out with pkijs v2 (on npm) -->
+  <script src="/assets/js/pkijs/common.js"></script>
+  <script src="/assets/js/pkijs/asn1.js"></script>
+  <script src="/assets/js/pkijs/x509_schema.js" type="text/javascript"></script>
+  <script src="/assets/js/pkijs/x509_simpl.js"></script>
+   
+  <!-- Angule Modules -->
+  <script src="/components/main/main.module.js"></script>
+  <script src="/components/file_uploader/file_uploader.module.js"></script>
+  <script src="/components/utils/utils.module.js"></script>
+  <script src="/app.js"></script>
+
+  <!-- Angualr Controllers -->
+  <script src="/components/main/main.controller.js"></script>
+
+  <!-- Angualr Directives -->
+  <script src="/components/file_uploader/file_uploader.directive.js"></script>
+  <script src="components/utils/jsonText.directive.js"></script>
+
+  <!-- Angualr Services -->
+  <script src="/components/file_uploader/file_uploader.service.js"></script>
+</head>
+
+<body ng-app="app">
+  <div>
+    <ng-include src="'/components/main/main.partial.html'"></ng-include>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "Y4AYnHgYmDrvajlG74uoNr11P7U=",
+			"path": "github.com/spaolacci/murmur3",
+			"revision": "539464a789e9b9f01bc857458ffe2c5c1a2ed382",
+			"revisionTime": "2019-03-17T07:47:36Z"
+		},
+		{
+			"checksumSHA1": "66/zT34P68LJDJCBTXb+xsLkaRo=",
+			"path": "github.com/willf/bitset",
+			"revision": "04e62ff6a0bf1233cd03086e5757172bd9b7d6ef",
+			"revisionTime": "2019-09-10T01:39:32Z"
+		},
+		{
+			"checksumSHA1": "yyysY3Ior4jy2HtchTxlP1ayIvQ=",
+			"path": "github.com/willf/bloom",
+			"revision": "25ba46ef8744ddeba999dcd048dbb8b0fa87edb3",
+			"revisionTime": "2019-02-28T21:23:55Z"
+		}
+	],
+	"rootPath": "blockchain-service/bloom-filter-reader"
+}

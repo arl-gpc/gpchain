@@ -1,0 +1,145 @@
+#
+# Copyright IBM Corp All Rights Reserved
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+version: '2'
+
+networks:
+  basic:
+
+services:
+  ca1.example.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca1.example.com
+      # TLS Settings
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/c273180b9e6477061e0eaab9d704e925f3ce4a116d408b06987851caa236b896_sk
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/c273180b9e6477061e0eaab9d704e925f3ce4a116d408b06987851caa236b896_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    extra_hosts:
+      - "peer0.org2.example.com:${ORG2_IP}"
+      - "orderer1.example.com:${ORG2_IP}"
+    container_name: ca1.example.com
+    networks:
+      - basic
+
+  orderer0.example.com:
+    container_name: orderer0.example.com
+    image: hyperledger/fabric-orderer
+    environment:
+      - FABRIC_LOGGING_SPEC=debug
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
+      - GODEBUG=netdns=go
+      # TLS Settings
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/msp/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/msp/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=/etc/hyperledger/msp/orderer/tls/ca.crt
+      # Raft TLS Settings
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/etc/hyperledger/msp/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/etc/hyperledger/msp/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=/etc/hyperledger/msp/orderer/tls/ca.crt
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+    command: orderer
+    ports:
+      - 7050:7050
+    volumes:
+        - ./config/:/etc/hyperledger/configtx
+        - ./crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/:/etc/hyperledger/msp/orderer
+    extra_hosts:
+      - "peer0.org2.example.com:${ORG2_IP}"
+      - "orderer1.example.com:${ORG2_IP}"
+    networks:
+    - basic
+
+  peer0.org1.example.com:
+    container_name: peer0.org1.example.com
+    image: hyperledger/fabric-peer
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_PEER_ID=peer0.org1.example.com
+      - FABRIC_LOGGING_SPEC=debug
+      - CORE_CHAINCODE_LOGGING_LEVEL=debug
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - GODEBUG=netdns=go
+      # Allows Peers to Receive Published Blocks
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      # Allows SDK Clients to "Discover" Peer
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
+      # TLS Settings
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/tlsca/tlsca.org1.example.com-cert.pem
+      # Client TLS Settings
+      - CORE_PEER_TLS_CLIENTAUTHREQUIRED = true
+      - CORE_PEER_TLS_CLIENTROOTCAS_FILES = /etc/hyperledger/fabric/tls/client/ca.crt
+      - CORE_PEER_TLS_CLIENTCERT_FILE = /etc/hyperledger/fabric/tls/client/client.crt
+      - CORE_PEER_TLS_CLIENTKEY_FILE = /etc/hyperledger/fabric/tls/client/client.key
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: peer node start
+    # command: peer node start --peer-chaincodedev=true
+    ports:
+      - 7051:7051
+      - 7053:7053
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
+        - ./config:/etc/hyperledger/configtx
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
+        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
+        - ./crypto-config/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem:/etc/hyperledger/fabric/tls/tlsca/tlsca.org1.example.com-cert.pem
+        - ./crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/tls:/etc/hyperledger/fabric/tls/client
+        - ./crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem:/etc/hyperledger/fabric/orderer/tlsca.example.com-cert.pem
+    extra_hosts:
+      - "peer0.org2.example.com:${ORG2_IP}"
+      - "orderer1.example.com:${ORG2_IP}"
+    depends_on:
+      - orderer0.example.com
+    networks:
+      - basic
+
+  cli:
+    container_name: cli
+    image: hyperledger/fabric-tools
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=debug
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+      - CORE_CHAINCODE_KEEPALIVE=10
+      # TLS Settings
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./../../go/src/chaincode/:/opt/gopath/src/chaincode/
+        - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+    networks:
+        - basic
+    extra_hosts:
+      - "peer0.org2.example.com:${ORG2_IP}"
+      - "orderer1.example.com:${ORG2_IP}"

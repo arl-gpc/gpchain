@@ -1,0 +1,1 @@
+(Root, {(Attr1, {(AttrA, {}),(AttrB, {})}), (Attr2, {(AttrC, {}),(AttrD, {})}), (Attr3, {(AttrE, {(AttrF, {})})})})

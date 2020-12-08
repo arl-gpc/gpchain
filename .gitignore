@@ -1,0 +1,22 @@
+#Ignore 
+go/bin/
+go/pkg/
+go/src/chaincode/**/vendor/*
+go/src/blockchain-service/**/vendor/*
+go/src/github.com/
+go/src/golang.org/
+go/src/google.golang.org/
+go/src/gopkg.in/
+go/src/**/node_modules/
+go/.cache/
+go/src/blockchain-service/permission-marshal/data/data.db
+go/src/blockchain-service/relay/bloomFilter.txt
+go/src/blockchain-service/**/policy-eval
+go/src/blockchain-service/**/bloomTest
+go/src/blockchain-service/**/main
+go/src/blockchain-service/bloom-filter-reader/bloomFilter.txt
+build/
+
+#Don't ignore
+!vendor.json
+go/src/blockchain-service/permission-marshal/config.yaml.bak
